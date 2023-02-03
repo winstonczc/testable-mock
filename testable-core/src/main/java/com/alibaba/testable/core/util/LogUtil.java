@@ -28,22 +28,18 @@ public class LogUtil {
 
     public static void trace(int indent, String msg, Object... args) {
         if (isTraceEnabled()) {
-            String text = String.format(space(indent) + msg + "\n", args);
-            System.out.print("[VERBOSE] ");
+            String text = String.format("[TRACE] " + space(indent) + msg + "\n", args);
             System.out.print(text);
-            write("[TIP] ");
             write(text);
         }
     }
 
     public static void debug(int indent, String msg, Object... args) {
-        String text = String.format(space(indent) + msg + "\n", args);
+        String text = String.format("[DEBUG] " + space(indent) + msg + "\n", args);
         if (currentLogLevel.level >= LogLevel.DEBUG.level) {
-            System.out.print("[DIAGNOSE] ");
             System.out.print(text);
+            write(text);
         }
-        write("[INFO] ");
-        write(text);
     }
 
     public static void info(String msg, Object... args) {
