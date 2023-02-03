@@ -31,8 +31,8 @@ class SourceClassHandlerTest {
             new MethodInsnNode(INVOKEVIRTUAL, "com/alibaba/testable/demo/BlackBox", "callMe", "()Ljava/lang/String;", false),
             new MethodInsnNode(INVOKEVIRTUAL, "java/lang/String", "startsWith", "(Ljava/lang/String;)Z", false)
         };
-        assertEquals(2, invoke(handler, "getMemberMethodStart", instructions, 3));
-        assertEquals(2, invoke(handler, "getMemberMethodStart", instructions, 6));
-        assertEquals(0, invoke(handler, "getMemberMethodStart", instructions, 9));
+        assertEquals(2, (int)invoke(handler, "getMemberMethodStart", instructions, 3));
+        assertEquals(2, (int)invoke(handler, "getMemberMethodStart", instructions, 6));
+        assertEquals(0, (int)invoke(handler, "getMemberMethodStart", instructions, 9));
     }
 }

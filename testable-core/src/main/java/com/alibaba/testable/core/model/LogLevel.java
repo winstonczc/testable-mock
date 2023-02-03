@@ -11,17 +11,22 @@ public enum LogLevel {
     /**
      * Warn only
      */
-    DEFAULT(1),
+    WARN(1),
+    /**
+     * Info only
+     */
+    INFO(2),
     /**
      * Show diagnose messages
      */
-    ENABLE(2),
+    DEBUG(3),
     /**
      * Show detail progress logs
      */
-    VERBOSE(3);
+    TRACE(4);
 
     public int level;
+
     LogLevel(int level) {
         this.level = level;
     }

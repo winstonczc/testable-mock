@@ -44,7 +44,7 @@ public class SourceClassHandler extends BaseClassHandler {
      */
     @Override
     protected void transform(ClassNode cn) {
-        LogUtil.diagnose("Found source class %s", cn.name);
+        LogUtil.debug("Found source class %s", cn.name);
         if (injectMethods.isEmpty()) {
             return;
         }
@@ -70,7 +70,7 @@ public class SourceClassHandler extends BaseClassHandler {
 
     private void transformMethod(MethodNode mn, Set<MethodInfo> memberInjectMethods,
                                  Set<MethodInfo> newOperatorInjectMethods) {
-        LogUtil.verbose("   Found method %s", mn.name);
+        LogUtil.trace("   Found method %s", mn.name);
         if (mn.name.startsWith(DOLLAR)) {
             // skip methods e.g. "$jacocoInit"
             return;
@@ -85,8 +85,8 @@ public class SourceClassHandler extends BaseClassHandler {
             if (invokeOps.contains(instructions[i].getOpcode())) {
                 MethodInsnNode node = (MethodInsnNode) instructions[i];
                 if (CONSTRUCTOR.equals(node.name)) {
-                    if (LogUtil.isVerboseEnabled()) {
-                        LogUtil.verbose("     Line %d, constructing \"%s\"", getLineNum(instructions, i),
+                    if (LogUtil.isTraceEnabled()) {
+                        LogUtil.trace("     Line %d, constructing \"%s\"", getLineNum(instructions, i),
                                 MethodUtil.toJavaMethodDesc(node.owner, node.desc));
                     }
                     MethodInfo newOperatorInjectMethod = getNewOperatorInjectMethod(newOperatorInjectMethods, node);
@@ -102,8 +102,8 @@ public class SourceClassHandler extends BaseClassHandler {
                         }
                     }
                 } else {
-                    if (LogUtil.isVerboseEnabled()) {
-                        LogUtil.verbose("     Line %d, invoking \"%s\"", getLineNum(instructions, i),
+                    if (LogUtil.isTraceEnabled()) {
+                        LogUtil.trace("     Line %d, invoking \"%s\"", getLineNum(instructions, i),
                                 MethodUtil.toJavaMethodDesc(node.owner, node.name, node.desc));
                     }
                     MethodInfo mockMethod = getMemberInjectMethodName(memberInjectMethods, node);
@@ -253,10 +253,10 @@ public class SourceClassHandler extends BaseClassHandler {
         String mockMethodName = newOperatorInjectMethod.getMockName();
         int invokeOpcode = newOperatorInjectMethod.isStatic() ? INVOKESTATIC : INVOKEVIRTUAL;
         String log = String.format("Line %d, mock method \"%s\" used", getLineNum(instructions, start), mockMethodName);
-        if (LogUtil.isVerboseEnabled()) {
-            LogUtil.verbose(5, log);
+        if (LogUtil.isTraceEnabled()) {
+            LogUtil.trace(5, log);
         } else {
-            LogUtil.diagnose(2, log);
+            LogUtil.debug(2, log);
         }
         String classType = ((TypeInsnNode) instructions[start]).desc;
         String constructorDesc = ((MethodInsnNode) instructions[end]).desc;
@@ -290,10 +290,10 @@ public class SourceClassHandler extends BaseClassHandler {
                                                     String ownerClass, int opcode, int start, int end) {
         String log = String.format("Line %d, mock method \"%s\" used", getLineNum(instructions, start),
                 mockMethod.getMockName());
-        if (LogUtil.isVerboseEnabled()) {
-            LogUtil.verbose(5, log);
+        if (LogUtil.isTraceEnabled()) {
+            LogUtil.trace(5, log);
         } else {
-            LogUtil.diagnose(2, log);
+            LogUtil.debug(2, log);
         }
         if (!mockMethod.isStatic()) {
             mn.instructions.insertBefore(instructions[start], new MethodInsnNode(INVOKESTATIC, mockClassName,

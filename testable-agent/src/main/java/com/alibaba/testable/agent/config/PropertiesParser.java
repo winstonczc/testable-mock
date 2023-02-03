@@ -39,10 +39,10 @@ public class PropertiesParser {
         try {
             InputStream in = new BufferedInputStream(new FileInputStream(fullPath));
             pps.load(in);
-            LogUtil.verbose("Loaded configure file %s", fullPath);
+            LogUtil.trace("Loaded configure file %s", fullPath);
         } catch (IOException e) {
             if (configFilePath == null) {
-                LogUtil.verbose("No configure file found, skip.");
+                LogUtil.trace("No configure file found, skip.");
             } else {
                 LogUtil.warn("No configure file found at %s", fullPath);
             }
