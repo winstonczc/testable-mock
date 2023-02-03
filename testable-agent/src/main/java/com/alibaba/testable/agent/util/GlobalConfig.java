@@ -20,7 +20,7 @@ public class GlobalConfig {
 
     private static final String MUTE = "mute";
     private static final String DEBUG = "debug";
-    private static final String VERBOSE = "verbose";
+    private static final String TRACE = "trace";
     private static final String DISABLE_LOG_FILE = "null";
     private static final String TESTABLE_AGENT_LOG = "testable-agent.log";
     private static final String DEFAULT_MAVEN_OUTPUT_FOLDER = "target";
@@ -31,6 +31,8 @@ public class GlobalConfig {
     private static String[] pkgPrefixWhiteList = null;
     private static String[] pkgPrefixBlackList = null;
     private static Map<String, String> mockPkgMapping = null;
+
+    private static String globalMock = "com.selftest.Mock";
     public static MockScope defaultMockScope = MockScope.GLOBAL;
     public static boolean enhanceFinal = false;
     public static boolean enhanceMock = true;
@@ -43,9 +45,9 @@ public class GlobalConfig {
         if (level.equals(MUTE)) {
             LogUtil.setDefaultLevel(LogLevel.DISABLE);
         } else if (level.equals(DEBUG)) {
-            LogUtil.setDefaultLevel(LogLevel.ENABLE);
-        } else if (level.equals(VERBOSE)) {
-            LogUtil.setDefaultLevel(LogLevel.VERBOSE);
+            LogUtil.setDefaultLevel(LogLevel.DEBUG);
+        } else if (level.equals(TRACE)) {
+            LogUtil.setDefaultLevel(LogLevel.TRACE);
         }
     }
 
@@ -69,7 +71,9 @@ public class GlobalConfig {
     }
 
     public static void setPkgPrefixWhiteList(String prefixes) {
-        pkgPrefixWhiteList = parsePkgPrefixList(prefixes).toArray(new String[0]);
+        List<String> pkgs = parsePkgPrefixList(prefixes);
+        pkgs.add(ClassUtil.toSlashSeparatedName(globalMock));
+        pkgPrefixWhiteList = pkgs.toArray(new String[0]);
     }
 
     public static String[] getPkgPrefixBlackList() {
@@ -87,7 +91,7 @@ public class GlobalConfig {
             if (!baseFolder.isEmpty()) {
                 String logFilePath = PathUtil.join(baseFolder, TESTABLE_AGENT_LOG);
                 LogUtil.setGlobalLogPath(logFilePath);
-                LogUtil.verbose("Generate testable agent log file at: %s", logFilePath);
+                LogUtil.trace("Generate testable agent log file at: %s", logFilePath);
             }
         } else if (!DISABLE_LOG_FILE.equals(logFile)) {
             // Use custom log file location
@@ -107,6 +111,14 @@ public class GlobalConfig {
         } else {
             return System.getProperty(PROPERTY_TEMP_DIR);
         }
+    }
+
+    public static String getGlobalMock() {
+        return globalMock;
+    }
+
+    public static void setGlobalMock(String globalMock) {
+        GlobalConfig.globalMock = globalMock;
     }
 
     public static void addMockPackageMapping(String originPkg, String mockClassPkg) {

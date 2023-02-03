@@ -20,8 +20,7 @@ import java.security.ProtectionDomain;
 import java.util.List;
 
 import static com.alibaba.testable.agent.constant.ConstPool.*;
-import static com.alibaba.testable.core.constant.ConstPool.DOLLAR;
-import static com.alibaba.testable.core.constant.ConstPool.TEST_POSTFIX;
+import static com.alibaba.testable.core.constant.ConstPool.*;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
 /**
@@ -35,8 +34,8 @@ public class TestableClassTransformer implements ClassFileTransformer {
     /**
      * Just avoid spend time to scan those surely non-user classes, should keep these lists as tiny as possible
      */
-    private final String[] BLACKLIST_PREFIXES = new String[] { "sun/", "com/sun/", "javax/crypto/",
-        "java/util/logging/", "org/gradle/", "org/robolectric/" };
+    private final String[] BLACKLIST_PREFIXES = new String[]{"sun/", "com/sun/", "javax/crypto/",
+            "java/util/logging/", "org/gradle/", "org/robolectric/"};
 
     private final MockClassParser mockClassParser = new MockClassParser();
     private final TestClassChecker testClassChecker = new TestClassChecker();
@@ -50,7 +49,7 @@ public class TestableClassTransformer implements ClassFileTransformer {
             return null;
         }
         byte[] bytes = GlobalConfig.enhanceOmniConstructor ?
-            new OmniClassHandler().getBytes(classFileBuffer) : classFileBuffer;
+                new OmniClassHandler().getBytes(classFileBuffer) : classFileBuffer;
         bytes = GlobalConfig.enhanceFinal ? new FinalFieldClassHandler().getBytes(bytes) : bytes;
         if (GlobalConfig.enhanceMock) {
             ClassNode cn = ClassUtil.getClassNode(className);
@@ -84,7 +83,7 @@ public class TestableClassTransformer implements ClassFileTransformer {
                 BytecodeUtil.dumpByte(cn, GlobalConfig.getDumpPath(), bytes);
                 return bytes;
             } else if (cn.name.endsWith(TEST_POSTFIX)) {
-                LogUtil.verbose("Failed to detect test framework for %s", cn.name);
+                LogUtil.trace("Failed to detect test framework for %s", cn.name);
             }
         } catch (TargetNotExistException e) {
             LogUtil.error("Invalid mock method %s::%s - %s", e.getClassName(), e.getMethodName(), e.getMessage());
@@ -112,8 +111,48 @@ public class TestableClassTransformer implements ClassFileTransformer {
         if (mockClass != null) {
             return mockClass;
         }
+
         // inner class should also look for mock class in the test class of its outer class
-        return foundMockForInnerSourceClass(className);
+        mockClass = foundMockForInnerSourceClass(className);
+        if (mockClass != null) {
+            return mockClass;
+        }
+
+        if (GlobalConfig.getGlobalMock() != null) {
+            String globalMockClass = GlobalConfig.getGlobalMock();
+            mockClass = foundMockFromGlobal(className, globalMockClass);
+            if (mockClass != null) {
+                return mockClass;
+            }
+        }
+        return null;
+    }
+
+    private String foundMockFromGlobal(final String className, String globalMockClass) {
+        String jcn = ClassUtil.toDotSeparatedName(className);
+        if (jcn.equals(globalMockClass)) {
+            return null;
+        }
+        ClassNode gcn = ClassUtil.getClassNode(globalMockClass);
+        if (gcn == null || gcn.innerClasses == null || gcn.innerClasses.size() <= 0) {
+            return null;
+        }
+        for (InnerClassNode icn : gcn.innerClasses) {
+            ClassNode innerCn = ClassUtil.getClassNode(icn.name);
+            AnnotationNode containerAnno = AnnotationUtil.getClassAnnotation(innerCn, MOCK_CONTAINER);
+            if (containerAnno == null) {
+                continue;
+            }
+            List<String> fors = AnnotationUtil.getAnnotationParameter(containerAnno, "fors", null, List.class);
+            if (fors == null || fors.size() <= 0) {
+                continue;
+            }
+            boolean match = fors.stream().anyMatch(f -> jcn.startsWith(f));
+            if (match) {
+                return ClassUtil.toSlashSeparatedName(icn.name);
+            }
+        }
+        return null;
     }
 
     private String mapPackage(String name) {
@@ -129,10 +168,11 @@ public class TestableClassTransformer implements ClassFileTransformer {
 
     private String foundMockForInnerSourceClass(String className) {
         return (className.contains(DOLLAR) && !className.endsWith(KOTLIN_POSTFIX_COMPANION)) ?
-            foundMockForStandardClass(className.substring(0, className.indexOf(DOLLAR))) : null;
+                foundMockForStandardClass(className.substring(0, className.indexOf(DOLLAR))) : null;
     }
 
     private String foundMockForStandardClass(String className) {
+        //look for test class
         ClassNode cn = adaptInnerClass(ClassUtil.getClassNode(ClassUtil.getTestClassName(className)));
         if (cn != null) {
             // handle @MockWith annotation on test class
@@ -202,7 +242,11 @@ public class TestableClassTransformer implements ClassFileTransformer {
         if (cn == null) {
             return null;
         }
-        return parseMockWithAnnotation(cn, ClassType.SourceClass);
+        String mockClass = parseMockWithAnnotation(cn, ClassType.SourceClass);
+        if (mockClass != null) {
+            return ClassUtil.toSlashSeparatedName(mockClass);
+        }
+        return null;
     }
 
     /**
@@ -253,10 +297,10 @@ public class TestableClassTransformer implements ClassFileTransformer {
         AnnotationNode an = AnnotationUtil.getClassAnnotation(cn, MOCK_WITH);
         if (an != null) {
             ClassType type = AnnotationUtil.getAnnotationParameter(an, FIELD_TREAT_AS, ClassType.GuessByName,
-                ClassType.class);
+                    ClassType.class);
             if (isExpectedType(cn.name, type, expectedType)) {
                 Type clazz = AnnotationUtil.getAnnotationParameter(an, ConstPool.FIELD_VALUE,
-                    Type.getType(NullType.class), Type.class);
+                        Type.getType(NullType.class), Type.class);
                 DiagnoseUtil.setupByClass(ClassUtil.getClassNode(clazz.getClassName()));
                 return clazz.getClassName();
             }

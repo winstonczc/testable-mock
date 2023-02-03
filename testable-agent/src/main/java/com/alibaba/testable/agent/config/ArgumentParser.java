@@ -11,6 +11,7 @@ public class ArgumentParser {
     private static final String LOG_FILE = "logFile";
     private static final String DUMP_PATH = "dumpPath";
     private static final String PKG_PREFIX = "pkgPrefix";
+    private static final String GLOBAL_MOCK = "globalMock";
     private static final String MOCK_SCOPE = "mockScope";
     private static final String CONFIG_FILE = "configFile";
     private static final String EQUAL = "=";
@@ -34,6 +35,8 @@ public class ArgumentParser {
                     GlobalConfig.setDumpPath(v);
                 } else if (k.equals(PKG_PREFIX)) {
                     GlobalConfig.setPkgPrefixWhiteList(v);
+                } else if (k.equals(GLOBAL_MOCK)) {
+                    GlobalConfig.setGlobalMock(v);
                 } else if (k.equals(MOCK_SCOPE)) {
                     GlobalConfig.defaultMockScope = MockScope.of(v);
                 } else if (k.equals(CONFIG_FILE)) {

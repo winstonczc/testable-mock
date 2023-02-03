@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.alibaba.testable</groupId>
         <artifactId>testable-parent</artifactId>
-        <version>0.7.9</version>
+        <version>0.7.10-SNAPSHOT</version>
         <relativePath>../testable-parent</relativePath>
     </parent>
     <artifactId>testable-agent</artifactId>
@@ -46,8 +46,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${plugin.compiler.version}</version>
                 <configuration>
-                    <source>${project.compiler.level}</source>
-                    <target>${project.compiler.level}</target>
+                    <source>8</source>
+                    <target>8</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>

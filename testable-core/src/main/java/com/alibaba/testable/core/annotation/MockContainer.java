@@ -14,7 +14,13 @@ import java.lang.annotation.*;
 public @interface MockContainer {
 
     /**
+     * @return
+     */
+    String[] fors() default {};
+
+    /**
      * specify the classes to inherit methods from
+     *
      * @return list of class
      */
     Class<?>[] inherits() default NullType.class;
