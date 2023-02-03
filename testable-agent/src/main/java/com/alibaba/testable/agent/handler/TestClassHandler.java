@@ -32,7 +32,7 @@ public class TestClassHandler extends BaseClassWithContextHandler {
      */
     @Override
     protected void transform(ClassNode cn) {
-        LogUtil.diagnose("Found test class %s", cn.name);
+        LogUtil.debug("Found test class %s", cn.name);
         for (MethodNode mn : cn.methods) {
             handleTestableUtil(mn);
             handleTestCaseMethod(mn, framework);
@@ -42,14 +42,14 @@ public class TestClassHandler extends BaseClassWithContextHandler {
             injectMockContextClean(cleanupMethod);
             cn.methods.add(cleanupMethod);
         }
-        LogUtil.diagnose("  Found %d test cases", testCaseCount);
+        LogUtil.debug("  Found %d test cases", testCaseCount);
     }
 
 
     private void handleTestCaseMethod(MethodNode mn, Framework framework) {
         TestCaseMethodType type = framework.checkMethodType(mn);
         if (type.equals(TestCaseMethodType.TEST)) {
-            LogUtil.verbose("   Test case \"%s\"", mn.name);
+            LogUtil.trace("   Test case \"%s\"", mn.name);
             injectMockContextInit(mn);
             testCaseCount++;
         } else if (type.equals(TestCaseMethodType.AFTER_TEST)) {
