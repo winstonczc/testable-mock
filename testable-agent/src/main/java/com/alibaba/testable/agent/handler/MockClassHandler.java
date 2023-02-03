@@ -45,7 +45,7 @@ public class MockClassHandler extends BaseClassWithContextHandler {
 
     @Override
     protected void transform(ClassNode cn) {
-        LogUtil.diagnose("Found mock class %s", cn.name);
+        LogUtil.debug("Found mock class %s", cn.name);
         if (!CLASS_OBJECT.equals(cn.superName)) {
             MockAssociationUtil.recordSubMockContainer(ClassUtil.toDotSeparatedName(cn.superName),
                 ClassUtil.toDotSeparatedName(cn.name));
@@ -68,7 +68,7 @@ public class MockClassHandler extends BaseClassWithContextHandler {
         }
         // should inject inherited at last to avoid above transfers
         injectInheritedMockMethods(cn);
-        LogUtil.diagnose("  Found %d mock methods", mockMethodCount);
+        LogUtil.debug("  Found %d mock methods", mockMethodCount);
     }
 
     /**
@@ -313,14 +313,14 @@ public class MockClassHandler extends BaseClassWithContextHandler {
                     throw new IllegalArgumentException("Mock method " + mn.name + " could not use both '"
                             + FIELD_TARGET_CLASS + "' and '" + FIELD_TARGET_CLASS_NAME + "' parameter");
                 }
-                if (LogUtil.isVerboseEnabled()) {
-                    LogUtil.verbose("   Mock method \"%s\" as \"%s\"", mn.name, MethodUtil.toJavaMethodDesc(
+                if (LogUtil.isTraceEnabled()) {
+                    LogUtil.trace("   Mock method \"%s\" as \"%s\"", mn.name, MethodUtil.toJavaMethodDesc(
                         getTargetMethodOwner(mn, an), getTargetMethodName(mn, an), getTargetMethodDesc(mn, an)));
                 }
                 return true;
             } else if (isMockNewAnnotation(an)) {
-                if (LogUtil.isVerboseEnabled()) {
-                    LogUtil.verbose("   Mock constructor \"%s\" as \"%s\"", mn.name, MethodUtil.toJavaMethodDesc(
+                if (LogUtil.isTraceEnabled()) {
+                    LogUtil.trace("   Mock constructor \"%s\" as \"%s\"", mn.name, MethodUtil.toJavaMethodDesc(
                         ClassUtil.toJavaStyleClassName(MethodUtil.getReturnType(mn.desc)), mn.desc));
                 }
                 return true;

@@ -238,7 +238,7 @@ public class BytecodeUtil {
         try {
             String dumpFile = PathUtil.join(dumpPath,
                 cn.name.replace(SLASH, DOT).replace(DOLLAR, UNDERLINE) + POSTFIX_CLASS);
-            LogUtil.verbose("Dump class: " + dumpFile);
+            LogUtil.trace("Dump class: " + dumpFile);
             FileOutputStream stream = new FileOutputStream(dumpFile);
             stream.write(bytes);
             stream.close();
