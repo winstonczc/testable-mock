@@ -252,7 +252,8 @@ public class SourceClassHandler extends BaseClassHandler {
                                              AbstractInsnNode[] instructions, int start, int end) {
         String mockMethodName = newOperatorInjectMethod.getMockName();
         int invokeOpcode = newOperatorInjectMethod.isStatic() ? INVOKESTATIC : INVOKEVIRTUAL;
-        String log = String.format("Line %d, mock method \"%s\" used", getLineNum(instructions, start), mockMethodName);
+        String log = String.format("Line %d, mock method \"%s\" used, mock class \"%s\"",
+                getLineNum(instructions, start), mockMethodName, newOperatorInjectMethod.getMockClass());
         if (LogUtil.isTraceEnabled()) {
             LogUtil.trace(5, log);
         } else {
@@ -288,8 +289,8 @@ public class SourceClassHandler extends BaseClassHandler {
 
     private AbstractInsnNode[] replaceMemberCallOps(MethodNode mn, MethodInfo mockMethod, AbstractInsnNode[] instructions,
                                                     String ownerClass, int opcode, int start, int end) {
-        String log = String.format("Line %d, mock method \"%s\" used", getLineNum(instructions, start),
-                mockMethod.getMockName());
+        String log = String.format("Line %d, mock method \"%s\" used, mock class \"%s\"", getLineNum(instructions, start),
+                mockMethod.getMockName(), mockMethod.getMockClass());
         if (LogUtil.isTraceEnabled()) {
             LogUtil.trace(5, log);
         } else {
