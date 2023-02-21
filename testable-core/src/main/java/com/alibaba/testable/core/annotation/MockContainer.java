@@ -14,6 +14,8 @@ import java.lang.annotation.*;
 public @interface MockContainer {
 
     /**
+     * specify source class packages which this mock container for
+     *
      * @return
      */
     String[] fors() default {};

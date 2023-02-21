@@ -143,7 +143,7 @@ public class TestableClassTransformer implements ClassFileTransformer {
             if (containerAnno == null) {
                 continue;
             }
-            List<String> fors = AnnotationUtil.getAnnotationParameter(containerAnno, "fors", null, List.class);
+            List<String> fors = AnnotationUtil.getAnnotationParameter(containerAnno, FIELD_FORS, null, List.class);
             if (fors == null || fors.size() <= 0) {
                 continue;
             }

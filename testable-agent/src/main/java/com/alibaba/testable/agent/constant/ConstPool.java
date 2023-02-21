@@ -12,6 +12,8 @@ public class ConstPool {
     public static final String FIELD_VALUE = "value";
     public static final String FIELD_INHERITS = "inherits";
 
+    public static final String FIELD_FORS = "fors";
+
     public static final String PROPERTY_USER_DIR = "user.dir";
     public static final String PROPERTY_TEMP_DIR = "java.io.tmpdir";
 
