@@ -45,6 +45,20 @@
         <testable.version>0.7.10-SNAPSHOT</testable.version>
     </properties>
 
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>https://maven.szzhijing.com/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>https://maven.szzhijing.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <profiles>
         <profile>
             <id>release</id>
@@ -113,7 +127,7 @@
                     </plugin>
                 </plugins>
             </build>
-            <distributionManagement>
+            <!--<distributionManagement>
                 <snapshotRepository>
                     <id>oss</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -122,7 +136,7 @@
                     <id>oss</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
-            </distributionManagement>
+            </distributionManagement>-->
         </profile>
     </profiles>
 </project>

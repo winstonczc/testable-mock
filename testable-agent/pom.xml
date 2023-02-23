@@ -177,7 +177,7 @@
                     </plugin>
                 </plugins>
             </build>
-            <distributionManagement>
+            <!--<distributionManagement>
                 <snapshotRepository>
                     <id>oss</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -186,7 +186,7 @@
                     <id>oss</id>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
-            </distributionManagement>
+            </distributionManagement>-->
         </profile>
     </profiles>
 </project>
