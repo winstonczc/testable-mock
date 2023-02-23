@@ -50,12 +50,12 @@
         <repository>
             <id>nexus-releases</id>
             <name>Nexus Release Repository</name>
-            <url>https://maven.szzhijing.com/repository/maven-releases/</url>
+            <url>https://maven.szzhijing.com/repository/releases</url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <name>Nexus Snapshot Repository</name>
-            <url>https://maven.szzhijing.com/repository/maven-snapshots/</url>
+            <url>https://maven.szzhijing.com/repository/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 

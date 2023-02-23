@@ -9,6 +9,10 @@
   <packaging>pom</packaging>
   <name>demos</name>
 
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
   <modules>
     <module>java-demo</module>
     <module>kotlin-demo</module>
