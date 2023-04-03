@@ -145,7 +145,7 @@ public class TestableClassTransformer implements ClassFileTransformer {
             }
             List<String> fors = AnnotationUtil.getAnnotationParameter(containerAnno, FIELD_FORS, null, List.class);
             if (fors == null || fors.size() <= 0) {
-                continue;
+                return ClassUtil.toSlashSeparatedName(icn.name);
             }
             boolean match = fors.stream().anyMatch(f -> jcn.startsWith(f));
             if (match) {
